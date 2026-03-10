@@ -7,23 +7,13 @@ const courses = [
 
 let myRegisteredCourses = [];
 
-// จัดการการ Login และอัปเดตชื่อผู้ใช้มุมขวาบน
 function handleLogin() {
-    // ดึงค่าจากช่อง Username
     let username = document.getElementById('username-input').value.trim();
-    
-    // ถ้าไม่ได้พิมพ์อะไรมา ให้ขึ้นว่า 'Guest'
-    if (username === '') {
-        username = 'Guest';
-    }
+    if (username === '') { username = 'Student'; }
 
-    // นำชื่อไปใส่ในป้ายขวาบนทุกหน้า
     const usernameDisplays = document.querySelectorAll('.current-username');
-    usernameDisplays.forEach(display => {
-        display.innerText = username;
-    });
+    usernameDisplays.forEach(display => { display.innerText = username; });
 
-    // ล็อกอินเสร็จ เปลี่ยนไปหน้ารายวิชา
     switchScreen('screen-courselist');
 }
 
@@ -36,7 +26,6 @@ function switchScreen(screenId) {
         bottomNav.style.display = 'none';
     } else {
         bottomNav.style.display = 'flex'; 
-        
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         
         if (screenId === 'screen-courselist' || screenId === 'screen-coursedetail' || screenId === 'screen-result') {
@@ -47,12 +36,8 @@ function switchScreen(screenId) {
     }
 }
 
-// ฟังก์ชันออกจากระบบ
 function logout() {
-    // เคลียร์รหัสผ่านในช่อง (ให้ดูสมจริงว่าล็อกเอาท์แล้ว)
     document.getElementById('username-input').value = '';
-    
-    // สลับกลับไปหน้าล็อกอิน
     switchScreen('screen-login');
 }
 
@@ -66,9 +51,9 @@ function renderCourseList() {
         
         let statusHtml = '';
         if (isRegistered) {
-            statusHtml = `<span class="status-badge status-registered">ลงทะเบียนแล้ว</span>`;
+            statusHtml = `<span class="status-badge status-registered">ลงแล้ว</span>`;
         } else if (isFull) {
-            statusHtml = `<span class="status-badge status-full">ที่นั่งเต็ม</span>`;
+            statusHtml = `<span class="status-badge status-full">เต็มแล้ว</span>`;
         } else {
             const seatsLeft = course.totalSeats - course.registeredSeats;
             statusHtml = `<span class="status-badge status-available">ว่าง ${seatsLeft} ที่</span>`;
@@ -77,14 +62,14 @@ function renderCourseList() {
         const card = document.createElement('div');
         card.className = 'course-card';
         card.innerHTML = `
-            <h3>${course.code} - ${course.title}</h3>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <p style="margin:0; font-size:0.85rem; color:#666;">${course.credits} Credits</p>
+            <h3>${course.code} ${course.title}</h3>
+            <div class="course-meta">
+                <p>${course.credits} CR</p>
                 ${statusHtml}
             </div>
             <div class="course-card-actions">
                 <button class="btn-secondary" onclick="viewCourseDetail(${course.id})">รายละเอียด</button>
-                <button class="btn-primary" style="padding: 8px 15px; width: auto;" 
+                <button class="btn-primary" style="padding: 10px 20px; width: auto; font-size: 0.9rem;" 
                     ${(isFull || isRegistered) ? 'disabled' : ''} 
                     onclick="registerCourse(${course.id})">
                     ลงทะเบียน
@@ -103,33 +88,34 @@ function viewCourseDetail(courseId) {
     const isFull = course.registeredSeats >= course.totalSeats;
     const seatsLeft = course.totalSeats - course.registeredSeats;
 
-    let seatStatusText = isFull ? "<span style='color:red;'>เต็มแล้ว</span>" : `ว่าง ${seatsLeft} ที่`;
+    let seatStatusText = isFull ? "<span style='color:#e53e3e;'>ที่นั่งเต็มแล้ว</span>" : `เหลือ ${seatsLeft} ที่นั่ง`;
 
     document.getElementById('course-detail-content').innerHTML = `
-        <h3 style="margin-top:10px;">${course.code} ${course.title}</h3>
-        <div class="detail-item"><strong>หน่วยกิต:</strong> <span>${course.credits}</span></div>
-        <div class="detail-item"><strong>วัน/เวลา:</strong> <span>${course.dayTime}</span></div>
-        <div class="detail-item"><strong>ห้องเรียน:</strong> <span>${course.room} (อาคาร ${course.building})</span></div>
-        <div class="detail-item"><strong>อาจารย์:</strong> <span>${course.instructor}</span></div>
+        <h3 style="font-size:1.3rem; font-weight:700; color:#1a202c; margin: 10px 0 20px 0;">${course.code} <br><span style="color:#e60064; font-size:1.1rem;">${course.title}</span></h3>
+        
+        <div class="detail-item"><strong>หน่วยกิต</strong> <span>${course.credits} CR</span></div>
+        <div class="detail-item"><strong>วัน/เวลา</strong> <span>${course.dayTime}</span></div>
+        <div class="detail-item"><strong>สถานที่</strong> <span>ห้อง ${course.room} อาคาร ${course.building}</span></div>
+        <div class="detail-item"><strong>ผู้สอน</strong> <span>${course.instructor}</span></div>
         
         <div class="seat-info">
-            ที่นั่งทั้งหมด ${course.totalSeats} | ลงแล้ว ${course.registeredSeats} <br>
-            สถานะ: <span>${seatStatusText}</span>
+            <p>สถานะการลงทะเบียน (${course.registeredSeats}/${course.totalSeats})</p>
+            <span>${seatStatusText}</span>
         </div>
 
         <div class="course-desc">
-            <strong>คำอธิบายรายวิชา:</strong><br>
+            <strong>คำอธิบายรายวิชา</strong>
             ${course.description}
         </div>
     `;
 
     const actionContainer = document.getElementById('detail-action-container');
     if (isRegistered) {
-        actionContainer.innerHTML = `<button class="btn-primary" disabled style="background:#1565c0;">คุณลงทะเบียนวิชานี้แล้ว</button>`;
+        actionContainer.innerHTML = `<button class="btn-primary" disabled>คุณลงทะเบียนวิชานี้แล้ว</button>`;
     } else if (isFull) {
-        actionContainer.innerHTML = `<button class="btn-primary" disabled>ที่นั่งเต็มแล้ว</button>`;
+        actionContainer.innerHTML = `<button class="btn-primary" disabled>ที่นั่งเต็มแล้ว ไม่สามารถลงทะเบียนได้</button>`;
     } else {
-        actionContainer.innerHTML = `<button class="btn-primary" onclick="registerCourse(${course.id})">ลงทะเบียนเรียน (Register)</button>`;
+        actionContainer.innerHTML = `<button class="btn-primary" onclick="registerCourse(${course.id})">ยืนยันลงทะเบียน</button>`;
     }
 
     switchScreen('screen-coursedetail');
@@ -153,7 +139,7 @@ function renderMySchedule() {
     let totalCredits = 0;
 
     if (myRegisteredCourses.length === 0) {
-        listContainer.innerHTML = '<div class="empty-schedule">คุณยังไม่ได้ลงทะเบียนเรียนวิชาใดๆ</div>';
+        listContainer.innerHTML = '<div class="empty-schedule">คุณยังไม่มีวิชาเรียนในเทอมนี้</div>';
         totalCreditsEl.innerText = '0';
         return;
     }
@@ -165,9 +151,15 @@ function renderMySchedule() {
             const card = document.createElement('div');
             card.className = 'schedule-card';
             card.innerHTML = `
-                <h4 style="margin-bottom:5px;">${course.code} ${course.title} (${course.credits} CR)</h4>
-                <p style="font-size:0.85rem; color:#555; margin-bottom:2px;">🕒 ${course.dayTime}</p>
-                <p style="font-size:0.85rem; color:#555;">📍 ห้อง ${course.room} | 👨‍🏫 ${course.instructor}</p>
+                <h4>${course.code} - ${course.title}</h4>
+                <div class="schedule-meta">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <span>${course.dayTime}</span>
+                </div>
+                <div class="schedule-meta">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>ห้อง ${course.room} | ผู้สอน: ${course.instructor}</span>
+                </div>
             `;
             listContainer.appendChild(card);
         }
