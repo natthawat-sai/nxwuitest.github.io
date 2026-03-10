@@ -1,69 +1,61 @@
-// ฐานข้อมูลวิชาจำลอง (มีเรื่องที่นั่งแล้ว)
 const courses = [
-    {
-        id: 1,
-        code: "CSC101",
-        title: "Introduction to Programming",
-        credits: 3,
-        dayTime: "จันทร์ & พุธ 10:00 - 12:00",
-        room: "11-201",
-        building: "ตึก 11",
-        instructor: "Dr. Smith",
-        description: "เรียนรู้พื้นฐานการเขียนโปรแกรม โครงสร้างตัวแปร ลูป เงื่อนไข เหมาะสำหรับผู้เริ่มต้น",
-        totalSeats: 40,
-        registeredSeats: 39 // เหลือ 1 ที่
-    },
-    {
-        id: 2,
-        code: "MTH101",
-        title: "Basic Mathematics",
-        credits: 3,
-        dayTime: "อังคาร & พฤหัส 08:00 - 10:00",
-        room: "9-304",
-        building: "ตึก 9",
-        instructor: "Prof. Johnson",
-        description: "คณิตศาสตร์พื้นฐานสำหรับการประยุกต์ใช้ในเทคโนโลยี ครอบคลุมเซต และแคลคูลัส",
-        totalSeats: 30,
-        registeredSeats: 30 // เต็มแล้ว
-    },
-    {
-        id: 3,
-        code: "IT205",
-        title: "Advanced Database",
-        credits: 3,
-        dayTime: "ศุกร์ 13:00 - 16:00",
-        room: "Lab 5-102",
-        building: "ตึก 5",
-        instructor: "Dr. Alice",
-        description: "การออกแบบและจัดการฐานข้อมูลขั้นสูง เรียนรู้ภาษา SQL เชิงลึก",
-        totalSeats: 25,
-        registeredSeats: 10 // เหลือ 15 ที่
-    },
-    {
-        id: 4,
-        code: "ENG111",
-        title: "English for Communication",
-        credits: 2,
-        dayTime: "พฤหัส 13:00 - 15:00",
-        room: "11-405",
-        building: "ตึก 11",
-        instructor: "Aj. Sarah",
-        description: "ฝึกทักษะการสื่อสารภาษาอังกฤษในชีวิตประจำวัน",
-        totalSeats: 35,
-        registeredSeats: 20
-    }
+    { id: 1, code: "CSC101", title: "Introduction to Programming", credits: 3, dayTime: "จันทร์ & พุธ 10:00 - 12:00", room: "11-201", building: "ตึก 11", instructor: "Dr. Smith", description: "เรียนรู้พื้นฐานการเขียนโปรแกรม โครงสร้างตัวแปร ลูป เงื่อนไข เหมาะสำหรับผู้เริ่มต้น", totalSeats: 40, registeredSeats: 39 },
+    { id: 2, code: "MTH101", title: "Basic Mathematics", credits: 3, dayTime: "อังคาร & พฤหัส 08:00 - 10:00", room: "9-304", building: "ตึก 9", instructor: "Prof. Johnson", description: "คณิตศาสตร์พื้นฐานสำหรับการประยุกต์ใช้ในเทคโนโลยี ครอบคลุมเซต และแคลคูลัส", totalSeats: 30, registeredSeats: 30 },
+    { id: 3, code: "IT205", title: "Advanced Database", credits: 3, dayTime: "ศุกร์ 13:00 - 16:00", room: "Lab 5-102", building: "ตึก 5", instructor: "Dr. Alice", description: "การออกแบบและจัดการฐานข้อมูลขั้นสูง เรียนรู้ภาษา SQL เชิงลึก", totalSeats: 25, registeredSeats: 10 },
+    { id: 4, code: "ENG111", title: "English for Communication", credits: 2, dayTime: "พฤหัส 13:00 - 15:00", room: "11-405", building: "ตึก 11", instructor: "Aj. Sarah", description: "ฝึกทักษะการสื่อสารภาษาอังกฤษในชีวิตประจำวัน", totalSeats: 35, registeredSeats: 20 }
 ];
 
-// เก็บวิชาที่นักศึกษาลงทะเบียนไว้ (เก็บเป็น Array ของ ID)
 let myRegisteredCourses = [];
 
-// ฟังก์ชันสลับหน้า
+// จัดการการ Login และอัปเดตชื่อผู้ใช้มุมขวาบน
+function handleLogin() {
+    // ดึงค่าจากช่อง Username
+    let username = document.getElementById('username-input').value.trim();
+    
+    // ถ้าไม่ได้พิมพ์อะไรมา ให้ขึ้นว่า 'Guest'
+    if (username === '') {
+        username = 'Guest';
+    }
+
+    // นำชื่อไปใส่ในป้ายขวาบนทุกหน้า
+    const usernameDisplays = document.querySelectorAll('.current-username');
+    usernameDisplays.forEach(display => {
+        display.innerText = username;
+    });
+
+    // ล็อกอินเสร็จ เปลี่ยนไปหน้ารายวิชา
+    switchScreen('screen-courselist');
+}
+
 function switchScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
+
+    const bottomNav = document.getElementById('bottom-nav');
+    if (screenId === 'screen-login') {
+        bottomNav.style.display = 'none';
+    } else {
+        bottomNav.style.display = 'flex'; 
+        
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        
+        if (screenId === 'screen-courselist' || screenId === 'screen-coursedetail' || screenId === 'screen-result') {
+            document.getElementById('nav-home').classList.add('active');
+        } else if (screenId === 'screen-schedule') {
+            document.getElementById('nav-schedule').classList.add('active');
+        }
+    }
 }
 
-// 1. เรนเดอร์รายการวิชา
+// ฟังก์ชันออกจากระบบ
+function logout() {
+    // เคลียร์รหัสผ่านในช่อง (ให้ดูสมจริงว่าล็อกเอาท์แล้ว)
+    document.getElementById('username-input').value = '';
+    
+    // สลับกลับไปหน้าล็อกอิน
+    switchScreen('screen-login');
+}
+
 function renderCourseList() {
     const container = document.getElementById('course-list-container');
     container.innerHTML = '';
@@ -87,15 +79,15 @@ function renderCourseList() {
         card.innerHTML = `
             <h3>${course.code} - ${course.title}</h3>
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <p style="margin:0;">${course.credits} Credits</p>
+                <p style="margin:0; font-size:0.85rem; color:#666;">${course.credits} Credits</p>
                 ${statusHtml}
             </div>
             <div class="course-card-actions">
-                <button class="btn-secondary" onclick="viewCourseDetail(${course.id})">ดูรายละเอียด</button>
+                <button class="btn-secondary" onclick="viewCourseDetail(${course.id})">รายละเอียด</button>
                 <button class="btn-primary" style="padding: 8px 15px; width: auto;" 
                     ${(isFull || isRegistered) ? 'disabled' : ''} 
                     onclick="registerCourse(${course.id})">
-                    Register
+                    ลงทะเบียน
                 </button>
             </div>
         `;
@@ -103,7 +95,6 @@ function renderCourseList() {
     });
 }
 
-// 2. ดูรายละเอียดวิชา
 function viewCourseDetail(courseId) {
     const course = courses.find(c => c.id === courseId);
     if (!course) return;
@@ -114,9 +105,8 @@ function viewCourseDetail(courseId) {
 
     let seatStatusText = isFull ? "<span style='color:red;'>เต็มแล้ว</span>" : `ว่าง ${seatsLeft} ที่`;
 
-    const detailContainer = document.getElementById('course-detail-content');
-    detailContainer.innerHTML = `
-        <h3>${course.code} ${course.title}</h3>
+    document.getElementById('course-detail-content').innerHTML = `
+        <h3 style="margin-top:10px;">${course.code} ${course.title}</h3>
         <div class="detail-item"><strong>หน่วยกิต:</strong> <span>${course.credits}</span></div>
         <div class="detail-item"><strong>วัน/เวลา:</strong> <span>${course.dayTime}</span></div>
         <div class="detail-item"><strong>ห้องเรียน:</strong> <span>${course.room} (อาคาร ${course.building})</span></div>
@@ -145,22 +135,16 @@ function viewCourseDetail(courseId) {
     switchScreen('screen-coursedetail');
 }
 
-// 3. ฟังก์ชันลงทะเบียน
 function registerCourse(courseId) {
     const courseIndex = courses.findIndex(c => c.id === courseId);
     if (courseIndex > -1) {
-        // เพิ่มจำนวนคนลงทะเบียน
         courses[courseIndex].registeredSeats += 1;
-        // บันทึกว่านักศึกษาคนนี้ลงแล้ว
         myRegisteredCourses.push(courseId);
-        
-        // อัปเดตหน้าแสดงผลใหม่
         renderCourseList(); 
         switchScreen('screen-result');
     }
 }
 
-// 4. เรนเดอร์หน้าตารางเรียน (สรุปหน่วยกิต และวิชา)
 function renderMySchedule() {
     const listContainer = document.getElementById('my-courses-list');
     const totalCreditsEl = document.getElementById('total-credits');
@@ -174,27 +158,21 @@ function renderMySchedule() {
         return;
     }
 
-    // ดึงข้อมูลวิชาที่ลงทะเบียนแล้วมาแสดง
     myRegisteredCourses.forEach(id => {
         const course = courses.find(c => c.id === id);
         if (course) {
             totalCredits += course.credits;
-            
             const card = document.createElement('div');
             card.className = 'schedule-card';
             card.innerHTML = `
-                <h4>${course.code} ${course.title} (${course.credits} CR)</h4>
-                <p>🕒 ${course.dayTime}</p>
-                <p>📍 ห้อง ${course.room} | 👨‍🏫 ${course.instructor}</p>
+                <h4 style="margin-bottom:5px;">${course.code} ${course.title} (${course.credits} CR)</h4>
+                <p style="font-size:0.85rem; color:#555; margin-bottom:2px;">🕒 ${course.dayTime}</p>
+                <p style="font-size:0.85rem; color:#555;">📍 ห้อง ${course.room} | 👨‍🏫 ${course.instructor}</p>
             `;
             listContainer.appendChild(card);
         }
     });
-
     totalCreditsEl.innerText = totalCredits;
 }
 
-// เริ่มต้นการทำงานเมื่อเปิดเว็บ
-window.onload = () => {
-    renderCourseList();
-};
+window.onload = () => { renderCourseList(); };
