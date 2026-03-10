@@ -17,40 +17,21 @@ body {
     overflow: hidden;
 }
 
-.blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    z-index: -1;
-}
+.blob { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; }
 .blob-1 { width: 400px; height: 400px; background: #e60064; top: -100px; left: -100px; opacity: 0.5; }
 .blob-2 { width: 350px; height: 350px; background: #000000; bottom: -100px; right: -100px; opacity: 0.2; }
 
 .glass-container {
-    width: 100%;
-    max-width: 420px;
-    height: 85vh;
-    max-height: 800px;
-    background: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-    border-radius: 30px;
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    width: 100%; max-width: 420px; height: 85vh; max-height: 800px;
+    background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 30px; padding: 20px; position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
 }
 
-.screen {
-    display: none;
-    height: 100%;
-    flex-direction: column;
-    animation: fadeIn 0.3s ease-in-out;
-}
+.screen { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.3s ease-in-out; }
 .screen.active { display: flex; }
+.screen.has-nav { padding-bottom: 60px; } 
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -61,18 +42,25 @@ body {
 .app-logo { max-width: 160px; height: auto; }
 h2 { font-size: 1.4rem; color: #333; margin-bottom: 15px; text-align: center;}
 
-/* Header */
+/* Header & User Profile */
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-.header h2 { margin: 0; font-size: 1.2rem; }
-.btn-back { background: none; border: none; font-size: 1.5rem; color: #e60064; cursor: pointer; width: 30px; text-align: left;}
-.btn-text { background: none; border: none; color: #e60064; font-weight: 500; cursor: pointer; font-size: 0.9rem;}
+.header h2 { margin: 0; font-size: 1.2rem; flex-grow: 1; text-align: center;}
+.btn-back { background: none; border: none; font-size: 1.5rem; color: #e60064; cursor: pointer; width: 80px; text-align: left; }
+
+/* โปรไฟล์ User ขวาบน */
+.user-info {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(255, 255, 255, 0.7); padding: 5px 10px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.8); width: 80px; justify-content: flex-end;
+}
+.user-icon { font-size: 0.9rem; }
+.current-username { 
+    font-size: 0.8rem; font-weight: 600; color: #e60064; 
+    max-width: 50px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+}
 
 /* Form */
 .input-group { margin-bottom: 15px; }
@@ -81,10 +69,7 @@ input[type="text"], input[type="password"] {
     background: rgba(255, 255, 255, 0.6); border-radius: 15px; font-size: 1rem; outline: none; transition: 0.3s;
 }
 input:focus { background: rgba(255, 255, 255, 0.9); border-color: #e60064; }
-
-.remember-me {
-    display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 0.9rem; color: #444;
-}
+.remember-me { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 0.9rem; color: #444; }
 .remember-me input[type="checkbox"] { accent-color: #e60064; width: 16px; height: 16px;}
 
 /* Buttons */
@@ -94,20 +79,15 @@ input:focus { background: rgba(255, 255, 255, 0.9); border-color: #e60064; }
 }
 .btn-primary:active { transform: scale(0.98); }
 .btn-primary:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.8); color: #333; padding: 8px 15px; border: none; border-radius: 10px; cursor: pointer; font-size: 0.9rem;
-}
+.btn-secondary { background: rgba(255, 255, 255, 0.8); color: #333; padding: 8px 15px; border: none; border-radius: 10px; cursor: pointer; font-size: 0.9rem; }
 
 .extra-links { text-align: center; margin-top: 20px; font-size: 0.9rem; }
 .extra-links a { color: #555; text-decoration: none; margin: 0 5px; }
 
 /* Course List */
-.course-list { overflow-y: auto; flex-grow: 1; padding-right: 5px; padding-bottom: 20px;}
-.course-card {
-    background: rgba(255, 255, 255, 0.6); border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.5);
-}
+.course-list { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
+.course-card { background: rgba(255, 255, 255, 0.6); border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.5); }
 .course-card h3 { font-size: 1rem; margin-bottom: 5px; color: #222; text-align: left;}
-.course-card p { font-size: 0.85rem; color: #666; margin-bottom: 10px; }
 .course-card-actions { display: flex; gap: 10px; justify-content: flex-end; align-items: center;}
 .status-badge { font-size: 0.8rem; padding: 3px 8px; border-radius: 8px; font-weight: 500; }
 .status-available { background: #e8f5e9; color: #2e7d32; }
@@ -116,23 +96,33 @@ input:focus { background: rgba(255, 255, 255, 0.9); border-color: #e60064; }
 
 /* Detail */
 .course-detail-content { flex-grow: 1; overflow-y: auto; }
-.course-detail-content h3 { font-size: 1.2rem; margin-bottom: 15px; color: #111; text-align: left;}
 .detail-item { margin-bottom: 8px; font-size: 0.95rem; color: #444; display: flex;}
 .detail-item strong { color: #222; width: 100px; flex-shrink: 0;}
 .seat-info { background: rgba(255,255,255,0.7); padding: 10px; border-radius: 10px; margin: 15px 0; text-align: center;}
 .seat-info span { font-size: 1.2rem; font-weight: 600; color: #e60064;}
 .course-desc { margin-top: 15px; background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 15px; font-size: 0.9rem; line-height: 1.5; }
 
-/* Result */
+/* Result & Schedule */
 .result-content { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; flex-grow: 1; }
 .success-icon { width: 80px; height: 80px; background: #4caf50; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 40px; margin-bottom: 20px; }
-.result-content p { color: #666; margin-bottom: 30px; }
-
-/* Schedule */
 .schedule-content { flex-grow: 1; overflow-y: auto; }
 .credit-summary { background: #e60064; color: white; padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 15px; }
-.credit-summary h3 { margin: 0; font-size: 1.1rem; color: white;}
 .schedule-card { background: rgba(255, 255, 255, 0.8); border-left: 5px solid #e60064; padding: 12px 15px; border-radius: 10px; margin-bottom: 10px; }
-.schedule-card h4 { font-size: 0.95rem; margin-bottom: 5px; color: #222; text-align: left;}
-.schedule-card p { font-size: 0.85rem; color: #555; margin: 2px 0; }
 .empty-schedule { text-align: center; color: #777; margin-top: 40px; font-size: 0.95rem; }
+
+/* ================= Bottom Navigation ================= */
+.bottom-nav {
+    display: flex; justify-content: space-around; align-items: center;
+    background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 70px;
+    border-radius: 0 0 30px 30px;
+}
+.nav-item {
+    display: flex; flex-direction: column; align-items: center;
+    color: #888; cursor: pointer; transition: 0.3s; width: 33.33%;
+}
+.nav-item.active { color: #e60064; }
+.nav-item.active .nav-icon { transform: scale(1.1); }
+.nav-icon { font-size: 1.4rem; margin-bottom: 4px; transition: 0.3s; }
+.nav-text { font-size: 0.75rem; font-weight: 500; }
