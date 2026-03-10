@@ -15,7 +15,7 @@
         
         <div id="screen-login" class="screen active">
             <div class="logo-container">
-                <img src="assets/logo.png" alt="SPU Logo" class="app-logo">
+                <img src="logo.png" alt="SPU Logo" class="app-logo" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<h1 style=\'color:#e60064;\'>SPU</h1>');">
             </div>
             <h2>เข้าสู่ระบบ</h2>
             <form id="login-form">
@@ -32,7 +32,7 @@
                 <button type="button" class="btn-primary" onclick="switchScreen('screen-courselist')">Login</button>
             </form>
             <div class="extra-links">
-                <a href="#">ลืมรหัสผ่าน?</a> | <a href="#" onclick="alert('ไปหน้าสมัครสมาชิก')">สมัครสมาชิก (Sign Up)</a>
+                <a href="#">ลืมรหัสผ่าน?</a> | <a href="#">สมัครสมาชิก (Sign Up)</a>
             </div>
         </div>
 
@@ -40,7 +40,8 @@
             <div class="header">
                 <button class="btn-back" onclick="switchScreen('screen-login')">❮</button>
                 <h2>รายวิชาที่เปิดสอน</h2>
-                <div style="width: 30px;"></div> </div>
+                <button class="btn-text" onclick="renderMySchedule(); switchScreen('screen-schedule');">ตารางเรียน</button>
+            </div>
             <div class="course-list" id="course-list-container">
                 </div>
         </div>
@@ -53,7 +54,8 @@
             </div>
             <div class="course-detail-content" id="course-detail-content">
                 </div>
-            <div id="detail-action-container"></div>
+            <div id="detail-action-container" style="margin-top: 20px;">
+                </div>
         </div>
 
         <div id="screen-result" class="screen">
@@ -65,8 +67,24 @@
             <div class="result-content">
                 <div class="success-icon">✓</div>
                 <h3>ลงทะเบียนสำเร็จ!</h3>
-                <p>ระบบได้ทำการบันทึกข้อมูลการลงทะเบียนเรียนของคุณเรียบร้อยแล้ว โปรดตรวจสอบสถานะอีกครั้ง</p>
-                <button class="btn-primary" onclick="switchScreen('screen-courselist')">กลับสู่หน้ารายวิชา</button>
+                <p>ระบบได้ทำการบันทึกข้อมูลเรียบร้อยแล้ว</p>
+                <button class="btn-primary" onclick="renderMySchedule(); switchScreen('screen-schedule');">ดูตารางเรียนของฉัน</button>
+                <button class="btn-secondary" style="margin-top: 10px; width: 100%; padding: 15px;" onclick="switchScreen('screen-courselist')">กลับไปหน้ารายวิชา</button>
+            </div>
+        </div>
+
+        <div id="screen-schedule" class="screen">
+            <div class="header">
+                <button class="btn-back" onclick="switchScreen('screen-courselist')">❮</button>
+                <h2>ตารางเรียนของฉัน</h2>
+                <div style="width: 30px;"></div>
+            </div>
+            <div class="schedule-content">
+                <div class="credit-summary">
+                    <h3>หน่วยกิตรวม: <span id="total-credits">0</span> Credits</h3>
+                </div>
+                <div id="my-courses-list">
+                    </div>
             </div>
         </div>
 
